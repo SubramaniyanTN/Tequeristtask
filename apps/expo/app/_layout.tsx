@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 import { useEffect } from 'react'
 import { KeyboardAvoidingView, Platform, useColorScheme } from 'react-native'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
@@ -6,6 +7,7 @@ import { SplashScreen, Stack } from 'expo-router'
 import { Provider } from 'app/provider'
 import { NativeToast } from '@my/ui/src/NativeToast'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export const unstable_settings = {
   // Ensure that reloading on `/user` keeps a back button present.
@@ -42,19 +44,21 @@ function RootLayoutNav() {
     <Provider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider>
-          <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          >
-            <Stack>
-              <Stack.Screen
-                options={{
-                  headerShown: false,
-                }}
-                name="index"
-              />
-            </Stack>
-          </KeyboardAvoidingView>
+          <GestureHandlerRootView>
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+              <Stack>
+                <Stack.Screen
+                  options={{
+                    headerShown: false,
+                  }}
+                  name="index"
+                />
+              </Stack>
+            </KeyboardAvoidingView>
+          </GestureHandlerRootView>
         </SafeAreaProvider>
         <NativeToast />
       </ThemeProvider>
