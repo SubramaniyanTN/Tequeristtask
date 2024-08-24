@@ -34,6 +34,7 @@
     "eslint": "^9.3.0",
     "node-gyp": "^10.1.0",
     "prettier": "^3.2.5",
+    "react-native-dnd-board": "^0.0.9",
     "turbo": "^1.13.3",
     "typescript": "^5.4.5"
   },

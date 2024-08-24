@@ -1,15 +1,10 @@
-import { HomeScreen } from 'app/features/home/screen'
-import { Stack } from 'expo-router'
+import { Text } from '@my/ui'
+import { SafeAreaViewWrapper } from '../Components'
 
 export default function Screen() {
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: 'Home',
-        }}
-      />
-      <HomeScreen />
-    </>
+    <SafeAreaViewWrapper>
+      <Text>Hello world</Text>
+    </SafeAreaViewWrapper>
   )
 }

@@ -4,7 +4,9 @@
     "app/**/*.ts",
     "app/**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "compilerOptions": {
     "composite": true,
