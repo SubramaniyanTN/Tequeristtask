@@ -1637,6 +1637,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dev-plugins/react-query@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "@dev-plugins/react-query@npm:0.0.7"
+  dependencies:
+    flatted: "npm:^3.2.9"
+  peerDependencies:
+    "@tanstack/react-query": "*"
+    expo: "*"
+  checksum: 10/8bb04c605c186129b91f170b7342b9684bc369a1102eee26da900960d11e530211581a1ffc7c07f3efd829e988d20ef6f3ab2c08a61755a6d5828c59198cdb31
+  languageName: node
+  linkType: hard
+
 "@edge-runtime/format@npm:2.2.1":
   version: 2.2.1
   resolution: "@edge-runtime/format@npm:2.2.1"
@@ -5709,6 +5721,24 @@ __metadata:
     "@tamagui/use-event": "npm:1.109.1"
     "@tamagui/use-force-update": "npm:1.109.1"
   checksum: 10/3543301d9a512737cc5caf7e37c57a325d9a95a2e80031f35eb54f85aaf1b2a9addce00f34d6d02dc28a64a541b065bc44234579a29f876a8d775e13d4f04b02
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.52.0":
+  version: 5.52.0
+  resolution: "@tanstack/query-core@npm:5.52.0"
+  checksum: 10/cd21e87ad7a0bbb262dea21704352eb1bbaafc26776ae1602b4be9a2d0d1f16a89cc4b5951f69083e26f970d75386431240d5a573ed9bce5a37ba2dc862e376a
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.52.1":
+  version: 5.52.1
+  resolution: "@tanstack/react-query@npm:5.52.1"
+  dependencies:
+    "@tanstack/query-core": "npm:5.52.0"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10/5a95c67d38d50e2aa994ca0d3c1cc9150ab37cb05f55a8a254c80cac3c85d9f4ca9a520e864be9910beec06df9cd6843988c3134322844e40370ad4c5ea098b0
   languageName: node
   linkType: hard
 
@@ -16747,8 +16777,10 @@ __metadata:
   resolution: "tequeristtask@workspace:."
   dependencies:
     "@babel/runtime": "npm:^7.24.6"
+    "@dev-plugins/react-query": "npm:^0.0.7"
     "@intechnity/react-native-kanban-board": "npm:^0.1.0"
     "@manypkg/cli": "npm:^0.21.4"
+    "@tanstack/react-query": "npm:^5.52.1"
     axios: "npm:^1.7.5"
     check-dependency-version-consistency: "npm:^4.1.0"
     eslint: "npm:^9.3.0"

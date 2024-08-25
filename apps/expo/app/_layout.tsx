@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../Services/i18next'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export const unstable_settings = {
   // Ensure that reloading on `/user` keeps a back button present.
@@ -18,6 +19,7 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
+const queryClient = new QueryClient()
 
 export default function App() {
   const [interLoaded, interError] = useFonts({
@@ -45,26 +47,28 @@ function RootLayoutNav() {
   return (
     <Provider>
       <I18nextProvider i18n={i18next}>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <SafeAreaProvider>
-            <GestureHandlerRootView>
-              <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              >
-                <Stack>
-                  <Stack.Screen
-                    options={{
-                      headerShown: false,
-                    }}
-                    name="index"
-                  />
-                </Stack>
-              </KeyboardAvoidingView>
-            </GestureHandlerRootView>
-          </SafeAreaProvider>
-          <NativeToast />
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <SafeAreaProvider>
+              <GestureHandlerRootView>
+                <KeyboardAvoidingView
+                  style={{ flex: 1 }}
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                >
+                  <Stack>
+                    <Stack.Screen
+                      options={{
+                        headerShown: false,
+                      }}
+                      name="index"
+                    />
+                  </Stack>
+                </KeyboardAvoidingView>
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
+            <NativeToast />
+          </ThemeProvider>
+        </QueryClientProvider>
       </I18nextProvider>
     </Provider>
   )

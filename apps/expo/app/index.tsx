@@ -3,6 +3,8 @@ import { SafeAreaViewWrapper } from '../Components'
 import { GestureDetector, Gesture } from 'react-native-gesture-handler'
 import { CardModel, ColumnModel, KanbanBoard } from '@intechnity/react-native-kanban-board'
 import { useTranslation } from 'react-i18next'
+import { useTasks } from '../Query/Tasks/tasks'
+import { ActivityIndicator } from 'react-native'
 
 enum BOARD_VALUES {
   notStarted = 'notStarted',
@@ -12,6 +14,8 @@ enum BOARD_VALUES {
 
 export default function Screen() {
   const { t } = useTranslation()
+  const tasks = useTasks()
+  console.log({ tasks })
   const gesture = Gesture.Pan()
   const columns = [
     new ColumnModel(BOARD_VALUES.notStarted, 'Not Started', 1),
@@ -87,15 +91,19 @@ export default function Screen() {
           children={t('create')}
         />
       </View>
-      <GestureDetector gesture={gesture}>
-        <KanbanBoard
-          columns={columns}
-          cards={cards}
-          onDragEnd={onCardDragEnd}
-          onCardPress={onCardPress}
-          style={{}}
-        />
-      </GestureDetector>
+      {tasks.isLoading ? (
+        <ActivityIndicator color={'#000'} />
+      ) : (
+        <GestureDetector gesture={gesture}>
+          <KanbanBoard
+            columns={columns}
+            cards={cards}
+            onDragEnd={onCardDragEnd}
+            onCardPress={onCardPress}
+            style={{}}
+          />
+        </GestureDetector>
+      )}
     </SafeAreaViewWrapper>
   )
 }

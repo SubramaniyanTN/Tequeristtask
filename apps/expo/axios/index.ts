@@ -1,0 +1,8 @@
+export { DeletePropsType } from './Delete/delete'
+export { default as deleteFn } from './Delete/delete'
+export { GetPropsType } from './Get/get'
+export { default as get } from './Get/get'
+export { default as patch } from './Patch/patch'
+export { PatchPropsType } from './Patch/patch'
+export { default as post } from './Post/post'
+export { PostPropsType } from './Post/post'
