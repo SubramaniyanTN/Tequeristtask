@@ -1,10 +1,12 @@
-import { Button, View } from '@my/ui'
+import { Button, Input, Text, View, useToastController, debounce } from '@my/ui'
 import { SafeAreaViewWrapper } from '../Components'
 import { GestureDetector, Gesture } from 'react-native-gesture-handler'
 import { CardModel, ColumnModel, KanbanBoard } from '@intechnity/react-native-kanban-board'
 import { useTranslation } from 'react-i18next'
 import { useTasks } from '../Query/Tasks/tasks'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Modal, Pressable, StyleSheet, TextInput } from 'react-native'
+import { useEffect, useState } from 'react'
+import { taskValidation } from '../Validation'
 
 enum BOARD_VALUES {
   notStarted = 'notStarted',
@@ -12,11 +14,35 @@ enum BOARD_VALUES {
   completed = 'completed',
 }
 
+export type TaskType = {
+  title: string
+  status: BOARD_VALUES
+  description: string
+}
+export type TaskErrorType = {
+  title: string
+  status: string
+  description: string
+}
+
 export default function Screen() {
   const { t } = useTranslation()
+  const [task, setTask] = useState<TaskType>({
+    title: '',
+    status: BOARD_VALUES.inProgress,
+    description: '',
+  })
+  const onChangeText = <T extends TaskType, K extends keyof T>(key: K, value: T[K]) => {
+    setTask((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      }
+    })
+  }
+  const debouncedText = debounce(onChangeText)
   const tasks = useTasks()
-  console.log({ tasks })
-  const gesture = Gesture.Pan()
+  const [isModalVisible, setIsModalVisible] = useState(false)
   const columns = [
     new ColumnModel(BOARD_VALUES.notStarted, 'Not Started', 1),
     new ColumnModel(BOARD_VALUES.inProgress, 'In Progress', 2),
@@ -56,7 +82,6 @@ export default function Screen() {
       null,
       1
     ),
-    // ... add more cards ...
   ]
   const onCardDragEnd = (
     srcColumn: ColumnModel,
@@ -72,7 +97,12 @@ export default function Screen() {
     // Handle card press
     console.log({ item })
   }
-  const onPress = () => {}
+  const onPress = () => {
+    setIsModalVisible(true)
+  }
+  const onRequestClose = () => {
+    setIsModalVisible(false)
+  }
   return (
     <SafeAreaViewWrapper>
       <View
@@ -88,22 +118,73 @@ export default function Screen() {
           onPress={onPress}
           variant="outlined"
           style={{ width: '45%', backgroundColor: '#FFFFFF' }}
-          children={t('create')}
+          children={t('createTask')}
         />
       </View>
       {tasks.isLoading ? (
         <ActivityIndicator color={'#000'} />
       ) : (
-        <GestureDetector gesture={gesture}>
-          <KanbanBoard
-            columns={columns}
-            cards={cards}
-            onDragEnd={onCardDragEnd}
-            onCardPress={onCardPress}
-            style={{}}
-          />
-        </GestureDetector>
+        <KanbanBoard
+          columns={columns}
+          cards={cards}
+          onDragEnd={onCardDragEnd}
+          onCardPress={onCardPress}
+          style={{}}
+        />
       )}
+      <Modal visible={isModalVisible} transparent={true}>
+        <Pressable
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
+          }}
+          onPress={onRequestClose}
+        >
+          <View
+            style={{
+              width: '80%',
+              padding: 20,
+              backgroundColor: '#FFF', // Transparent white background
+              borderRadius: 10,
+              gap: 20,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Input
+              placeholder={t('taskName')}
+              style={[styles.textInputStyle]}
+              onChangeText={(text) => debouncedText('title', text)}
+              defaultValue={task.title}
+            />
+            <Input
+              placeholder={t('description')}
+              style={[styles.textInputStyle, { height: 100 }]}
+              multiline
+              onChangeText={(text) => debouncedText('description', text)}
+              defaultValue={task.description}
+            />
+            <Button
+              style={styles.buttonStyle}
+              backgroundColor={'black'}
+              color={'white'}
+              children={t('create')}
+            />
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaViewWrapper>
   )
 }
+
+const styles = StyleSheet.create({
+  textInputStyle: {
+    width: '100%',
+  },
+  buttonStyle: {
+    width: '40%',
+  },
+})
