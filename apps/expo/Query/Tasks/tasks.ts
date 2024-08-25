@@ -56,7 +56,7 @@ export const useCreateTask = (
   >({
     mutationFn: post,
     onSuccess: (data, variables, context) => {
-      toast.show('Completed', {
+      toast.show('Task Created Successfully', {
         burntOptions: {
           haptic: 'success',
           from: 'top',
@@ -102,7 +102,7 @@ export const useUpdateTask = () => {
   >({
     mutationFn: put,
     onSuccess(data, variables, context) {
-      toast.show('Completed', {
+      toast.show('Updated Successfully', {
         burntOptions: {
           haptic: 'success',
           from: 'top',
