@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { baseURL } from '../Utils'
 
-export const apiInstance = axios.create({
+const api = axios.create({
   baseURL: baseURL,
 })
+
+export default api
