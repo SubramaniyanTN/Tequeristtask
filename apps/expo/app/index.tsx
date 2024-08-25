@@ -1,7 +1,8 @@
-import { Button, Text, View } from '@my/ui'
+import { Button, View } from '@my/ui'
 import { SafeAreaViewWrapper } from '../Components'
 import { GestureDetector, Gesture } from 'react-native-gesture-handler'
 import { CardModel, ColumnModel, KanbanBoard } from '@intechnity/react-native-kanban-board'
+import { useTranslation } from 'react-i18next'
 
 enum BOARD_VALUES {
   notStarted = 'notStarted',
@@ -10,6 +11,7 @@ enum BOARD_VALUES {
 }
 
 export default function Screen() {
+  const { t } = useTranslation()
   const gesture = Gesture.Pan()
   const columns = [
     new ColumnModel(BOARD_VALUES.notStarted, 'Not Started', 1),
@@ -82,7 +84,7 @@ export default function Screen() {
           onPress={onPress}
           variant="outlined"
           style={{ width: '45%', backgroundColor: '#FFFFFF' }}
-          children="Press me"
+          children={t('create')}
         />
       </View>
       <GestureDetector gesture={gesture}>

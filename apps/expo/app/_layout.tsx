@@ -8,6 +8,8 @@ import { Provider } from 'app/provider'
 import { NativeToast } from '@my/ui/src/NativeToast'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { I18nextProvider } from 'react-i18next'
+import i18next from '../Services/i18next'
 
 export const unstable_settings = {
   // Ensure that reloading on `/user` keeps a back button present.
@@ -42,26 +44,28 @@ function RootLayoutNav() {
 
   return (
     <Provider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
-              <Stack>
-                <Stack.Screen
-                  options={{
-                    headerShown: false,
-                  }}
-                  name="index"
-                />
-              </Stack>
-            </KeyboardAvoidingView>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-        <NativeToast />
-      </ThemeProvider>
+      <I18nextProvider i18n={i18next}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <SafeAreaProvider>
+            <GestureHandlerRootView>
+              <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              >
+                <Stack>
+                  <Stack.Screen
+                    options={{
+                      headerShown: false,
+                    }}
+                    name="index"
+                  />
+                </Stack>
+              </KeyboardAvoidingView>
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+          <NativeToast />
+        </ThemeProvider>
+      </I18nextProvider>
     </Provider>
   )
 }
