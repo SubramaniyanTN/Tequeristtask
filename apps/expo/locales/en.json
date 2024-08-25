@@ -2,5 +2,12 @@
   "createTask": "Create Task",
   "taskName": "Task Name",
   "description": "Description",
-  "create": "Create"
+  "create": "Create",
+  "notStarted": "Not Started",
+  "inProgress": "In Progress",
+  "completed": "Completed",
+  "taskCreatedSuccess": "Task Created Successfully",
+  "updateSuccess": "Updated Successfully",
+  "error": "Error",
+  "loading": "Loading..."
 }

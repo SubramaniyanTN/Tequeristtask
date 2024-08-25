@@ -3,6 +3,7 @@ import { QUERY_KEY } from '../QUERY_KEY'
 import { get, post, PostPropsType, put } from 'apps/expo/axios'
 import { useToastController } from '@my/ui'
 import { TaskType } from 'apps/expo/app'
+import { useTranslation } from 'react-i18next'
 
 type TaskResponseType = TaskType & {
   createdAt: Date
@@ -10,6 +11,7 @@ type TaskResponseType = TaskType & {
 }
 
 export const useTasks = () => {
+  const { t } = useTranslation()
   return useQuery<Array<TaskResponseType>>({
     queryKey: [QUERY_KEY.tasks],
     queryFn: ({ pageParam = 0 }) => {
@@ -19,6 +21,7 @@ export const useTasks = () => {
     },
   })
 }
+
 export const useCreateTask = (
   props?: Partial<
     UseMutationOptions<
@@ -39,6 +42,7 @@ export const useCreateTask = (
 ) => {
   const queryClient = useQueryClient()
   const toast = useToastController()
+  const { t } = useTranslation()
 
   return useMutation<
     TaskType & {
@@ -56,7 +60,7 @@ export const useCreateTask = (
   >({
     mutationFn: post,
     onSuccess: (data, variables, context) => {
-      toast.show('Task Created Successfully', {
+      toast.show(t('taskCreatedSuccess'), {
         burntOptions: {
           haptic: 'success',
           from: 'top',
@@ -68,7 +72,7 @@ export const useCreateTask = (
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.tasks] })
     },
     onError: (error, variables, context) => {
-      toast.show(error.response.data.msg || 'Error', {
+      toast.show(error.response.data.msg || t('error'), {
         burntOptions: {
           haptic: 'error',
           from: 'top',
@@ -86,6 +90,8 @@ export const useCreateTask = (
 export const useUpdateTask = () => {
   const toast = useToastController()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
+
   return useMutation<
     TaskResponseType,
     {
@@ -102,7 +108,7 @@ export const useUpdateTask = () => {
   >({
     mutationFn: put,
     onSuccess(data, variables, context) {
-      toast.show('Updated Successfully', {
+      toast.show(t('updateSuccess'), {
         burntOptions: {
           haptic: 'success',
           from: 'top',
@@ -117,7 +123,7 @@ export const useUpdateTask = () => {
       toast.show(
         typeof error.response.data === 'string'
           ? error.response.data
-          : (error.response.data?.msg && error.response.data.msg) || 'Error',
+          : (error.response.data?.msg && error.response.data.msg) || t('error'),
         {
           burntOptions: {
             haptic: 'error',

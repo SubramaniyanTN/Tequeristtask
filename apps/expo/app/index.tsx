@@ -27,9 +27,9 @@ export default function Screen() {
   const draggingRef = useRef(false)
 
   const [columns, setColumns] = useState([
-    new ColumnModel('notStarted', 'Not Started', 1),
-    new ColumnModel('inProgress', 'In Progress', 2),
-    new ColumnModel('completed', 'Completed', 3),
+    new ColumnModel('notStarted', t('notStarted'), 1),
+    new ColumnModel('inProgress', t('inProgress'), 2),
+    new ColumnModel('completed', t('completed'), 3),
   ])
 
   const tagCreation = (status: TaskType['status']): Tag => {
@@ -37,19 +37,19 @@ export default function Screen() {
       return {
         backgroundColor: 'red',
         textColor: 'white',
-        text: 'Not started',
+        text: t('notStarted'),
       }
     } else if (status === 'inProgress') {
       return {
         backgroundColor: 'purple',
         textColor: 'white',
-        text: 'In Progress',
+        text: t('inProgress'),
       }
     } else {
       return {
         backgroundColor: 'green',
         textColor: 'white',
-        text: 'Completed',
+        text: t('completed'),
       }
     }
   }
