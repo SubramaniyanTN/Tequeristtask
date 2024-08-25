@@ -2632,6 +2632,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@intechnity/react-native-kanban-board@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@intechnity/react-native-kanban-board@npm:0.1.0"
+  dependencies:
+    react-native-gesture-handler: "npm:^2.9.0"
+    react-timeout: "npm:^2.0.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/66fe784dc9df8749466121444aef50d3ff87a318d438484731df7f5214542c2851360838c536af7fab5387a158184d292e3dea61b825d8d9ea554e4a20d5afd6
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -10963,6 +10976,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hoist-non-react-statics@npm:^2.3.1":
+  version: 2.5.5
+  resolution: "hoist-non-react-statics@npm:2.5.5"
+  checksum: 10/5cd8f04dc3adec5e19fa4dd05a03216b0237e98d870064f4232e6339e9bbe1bd07b41cca2bb6e999c328b409271c1eefde299a69ca75aff510acdd4e7b3d340e
+  languageName: node
+  linkType: hard
+
 "hoist-non-react-statics@npm:^3.3.0":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
@@ -14709,6 +14729,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-gesture-handler@npm:^2.9.0":
+  version: 2.18.1
+  resolution: "react-native-gesture-handler@npm:2.18.1"
+  dependencies:
+    "@egjs/hammerjs": "npm:^2.0.17"
+    hoist-non-react-statics: "npm:^3.3.0"
+    invariant: "npm:^2.2.4"
+    prop-types: "npm:^15.7.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/d97cb20ed32c58a66c21a53727ce22cb7ece104bea296b72f4a95a3b3b61d03561e46b437f818603bcc58518dc5cd5bd42aaddb9755fb9eca467ce45358d4765
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:~2.16.2":
   version: 2.16.2
   resolution: "react-native-gesture-handler@npm:2.16.2"
@@ -15016,6 +15051,16 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10/80c58fd6aac3594e351e2e7b048d8a5b09508adb21031a38b3c40911fe58295572eddc640d4b20a7be364842c8ed1120fe30097e22ea055316b375b88d4ff02a
+  languageName: node
+  linkType: hard
+
+"react-timeout@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "react-timeout@npm:2.0.1"
+  dependencies:
+    hoist-non-react-statics: "npm:^2.3.1"
+    object-assign: "npm:^4.0.1"
+  checksum: 10/4297ea3982f1990868a5cfc97de76f51d705803b618eadd7dd25d0bc21056957521dda1ce4e48a5f13dd98ae8e3a08d6e938f46041f49b723037c8bde4287c06
   languageName: node
   linkType: hard
 
@@ -16627,6 +16672,7 @@ __metadata:
   resolution: "tequeristtask@workspace:."
   dependencies:
     "@babel/runtime": "npm:^7.24.6"
+    "@intechnity/react-native-kanban-board": "npm:^0.1.0"
     "@manypkg/cli": "npm:^0.21.4"
     check-dependency-version-consistency: "npm:^4.1.0"
     eslint: "npm:^9.3.0"
