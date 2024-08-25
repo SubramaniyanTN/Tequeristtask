@@ -1,10 +1,11 @@
-import { Button, Input, View, debounce } from '@my/ui'
+import { Button, View } from '@my/ui'
 import { SafeAreaViewWrapper, TaskCreationModal } from '../Components'
 import { CardModel, ColumnModel, KanbanBoard } from '@intechnity/react-native-kanban-board'
 import { useTranslation } from 'react-i18next'
-import { useTasks } from '../Query/Tasks/tasks'
-import { ActivityIndicator, Modal, Pressable, StyleSheet, TextInput } from 'react-native'
+import { useTasks, useUpdateTask } from '../Query/Tasks/tasks'
+import { ActivityIndicator } from 'react-native'
 import { useState } from 'react'
+import { Tag } from '@intechnity/react-native-kanban-board/lib/typescript/models/tag'
 
 export type TaskType = {
   title: string
@@ -21,46 +22,46 @@ export default function Screen() {
   const { t } = useTranslation()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const tasks = useTasks()
+  const updateTask = useUpdateTask()
   const columns = [
     new ColumnModel('notStarted', 'Not Started', 1),
     new ColumnModel('inProgress', 'In Progress', 2),
     new ColumnModel('completed', 'Completed', 3),
   ]
-
-  const cards = [
-    new CardModel(
-      'card1',
-      'notStarted',
-      '1st Card',
-      'Example card',
-      'test description',
-      [
-        {
-          text: 'Tag1',
-          backgroundColor: '#00FF00',
-          textColor: '#000000',
-        },
-      ],
-      null,
-      1
-    ),
-    new CardModel(
-      'Card2',
-      'notStarted',
-      '2st Card',
-      'Example card',
-      'test description',
-      [
-        {
-          text: 'Tag1',
-          backgroundColor: '#00FF00',
-          textColor: '#000000',
-        },
-      ],
-      null,
-      1
-    ),
-  ]
+  const tagCreation = (status: TaskType['status']): Tag => {
+    if (status === 'notStarted') {
+      return {
+        backgroundColor: 'red',
+        textColor: 'white',
+        text: 'Not started',
+      }
+    } else if (status === 'inProgress') {
+      return {
+        backgroundColor: 'purple',
+        textColor: 'white',
+        text: 'In Progress',
+      }
+    } else {
+      return {
+        backgroundColor: 'green',
+        textColor: 'white',
+        text: 'Completed',
+      }
+    }
+  }
+  const cards = tasks.data?.map(
+    (singleData, index) =>
+      new CardModel(
+        singleData.id,
+        singleData.status,
+        singleData.title,
+        '',
+        singleData.description,
+        [tagCreation(singleData.status)],
+        null,
+        index
+      )
+  )
   const onCardDragEnd = (
     srcColumn: ColumnModel,
     destColumn: ColumnModel,
@@ -68,7 +69,21 @@ export default function Screen() {
     targetIdx: number
   ) => {
     // Handle card drag and drop
-    console.log('On card drag end', { srcColumn, destColumn, item, targetIdx })
+    if (srcColumn.id !== destColumn.id) {
+      const data = tasks.data?.find((singleData) => singleData.id === item.id)
+      if (data) {
+        updateTask.mutate({
+          url: `/${item.id}`,
+          data: {
+            id: data.id,
+            createdAt: data.createdAt,
+            description: data.description,
+            title: data.title,
+            status: destColumn.id as TaskType['status'],
+          },
+        })
+      }
+    }
   }
 
   const onCardPress = (item: CardModel) => {
@@ -81,6 +96,7 @@ export default function Screen() {
   const onRequestClose = () => {
     setIsModalVisible(false)
   }
+
   return (
     <SafeAreaViewWrapper>
       <View
@@ -104,10 +120,14 @@ export default function Screen() {
       ) : (
         <KanbanBoard
           columns={columns}
-          cards={cards}
+          cards={cards || []}
           onDragEnd={onCardDragEnd}
           onCardPress={onCardPress}
           style={{}}
+          cardContentTextStyle={{
+            color: '#000',
+            fontSize: 10,
+          }}
         />
       )}
       <TaskCreationModal isModalVisible={isModalVisible} onRequestClose={onRequestClose} />

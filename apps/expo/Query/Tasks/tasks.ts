@@ -1,10 +1,16 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, UseMutationOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEY } from '../QUERY_KEY'
-import { get, post, PostPropsType } from 'apps/expo/axios'
-import { Toast, useToastController } from '@my/ui'
+import { get, post, PostPropsType, put } from 'apps/expo/axios'
+import { useToastController } from '@my/ui'
+import { TaskType } from 'apps/expo/app'
+
+type TaskResponseType = TaskType & {
+  createdAt: Date
+  id: string
+}
 
 export const useTasks = () => {
-  return useQuery({
+  return useQuery<Array<TaskResponseType>>({
     queryKey: [QUERY_KEY.tasks],
     queryFn: ({ pageParam = 0 }) => {
       return get({
@@ -13,32 +19,43 @@ export const useTasks = () => {
     },
   })
 }
-export const useCreateTasks = () => {
+export const useCreateTask = (
+  props?: Partial<
+    UseMutationOptions<
+      TaskType & {
+        createdAt: Date
+      },
+      {
+        response: {
+          data: {
+            msg: string
+          }
+        }
+      },
+      PostPropsType<TaskType>,
+      any
+    >
+  >
+) => {
   const queryClient = useQueryClient()
   const toast = useToastController()
 
   return useMutation<
-    {
-      status: number
-      message: string
-      data: any
+    TaskType & {
+      createdAt: Date
     },
     {
       response: {
         data: {
-          devMessage: null | any
-          message: string
-          statusCode: number
-          success: boolean
+          msg: string
         }
       }
     },
-    PostPropsType<any>,
+    PostPropsType<TaskType>,
     any
   >({
     mutationFn: post,
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: (data, variables, context) => {
       toast.show('Completed', {
         burntOptions: {
           haptic: 'success',
@@ -51,16 +68,67 @@ export const useCreateTasks = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.tasks] })
     },
     onError: (error, variables, context) => {
-      console.log(error)
-      toast.show('Error', {
+      toast.show(error.response.data.msg || 'Error', {
         burntOptions: {
           haptic: 'error',
+          from: 'top',
+          preset: 'error',
+        },
+        native: true,
+        duration: 1000,
+        notificationOptions: {},
+      })
+    },
+    ...props,
+  })
+}
+
+export const useUpdateTask = () => {
+  const toast = useToastController()
+  const queryClient = useQueryClient()
+  return useMutation<
+    TaskResponseType,
+    {
+      response: {
+        data:
+          | string
+          | {
+              msg: string
+            }
+      }
+    },
+    PostPropsType<TaskResponseType>,
+    any
+  >({
+    mutationFn: put,
+    onSuccess(data, variables, context) {
+      toast.show('Completed', {
+        burntOptions: {
+          haptic: 'success',
           from: 'top',
         },
         native: true,
         duration: 1000,
         notificationOptions: {},
       })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.tasks] })
+    },
+    onError(error, variables, context) {
+      toast.show(
+        typeof error.response.data === 'string'
+          ? error.response.data
+          : (error.response.data?.msg && error.response.data.msg) || 'Error',
+        {
+          burntOptions: {
+            haptic: 'error',
+            from: 'top',
+            preset: 'error',
+          },
+          native: true,
+          duration: 1000,
+          notificationOptions: {},
+        }
+      )
     },
   })
 }

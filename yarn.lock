@@ -14821,6 +14821,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-element-dropdown@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "react-native-element-dropdown@npm:2.12.1"
+  dependencies:
+    lodash: "npm:^4.17.21"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/7612f82d9f03e0b9354e552e032cec92eb45170d897ae3db3760700858042081c588d4b7ceb7bd786504f4982f82546ff148bdf783dec4cd4b063b03a170dbc6
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^1.10.0":
   version: 1.10.3
   resolution: "react-native-gesture-handler@npm:1.10.3"
@@ -16789,6 +16801,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     react-i18next: "npm:^15.0.1"
     react-native-dnd-board: "npm:^0.0.9"
+    react-native-element-dropdown: "npm:^2.12.1"
     turbo: "npm:^1.13.3"
     typescript: "npm:^5.4.5"
   languageName: unknown
