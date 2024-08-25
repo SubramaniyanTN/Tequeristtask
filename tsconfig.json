@@ -9,6 +9,9 @@
     }
   },
   "extends": "./tsconfig.base",
+  "include": [
+    "./expo/**/*" // Include all files in the 'expo' directory
+  ],
   "exclude": [
     "**/node_modules",
     "**/dist",
