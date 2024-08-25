@@ -1,22 +1,14 @@
-import { Button, Input, Text, View, useToastController, debounce } from '@my/ui'
-import { SafeAreaViewWrapper } from '../Components'
-import { GestureDetector, Gesture } from 'react-native-gesture-handler'
+import { Button, Input, View, debounce } from '@my/ui'
+import { SafeAreaViewWrapper, TaskCreationModal } from '../Components'
 import { CardModel, ColumnModel, KanbanBoard } from '@intechnity/react-native-kanban-board'
 import { useTranslation } from 'react-i18next'
 import { useTasks } from '../Query/Tasks/tasks'
 import { ActivityIndicator, Modal, Pressable, StyleSheet, TextInput } from 'react-native'
-import { useEffect, useState } from 'react'
-import { taskValidation } from '../Validation'
-
-enum BOARD_VALUES {
-  notStarted = 'notStarted',
-  inProgress = 'inProgress',
-  completed = 'completed',
-}
+import { useState } from 'react'
 
 export type TaskType = {
   title: string
-  status: BOARD_VALUES
+  status: 'notStarted' | 'inProgress' | 'completed'
   description: string
 }
 export type TaskErrorType = {
@@ -27,32 +19,18 @@ export type TaskErrorType = {
 
 export default function Screen() {
   const { t } = useTranslation()
-  const [task, setTask] = useState<TaskType>({
-    title: '',
-    status: BOARD_VALUES.inProgress,
-    description: '',
-  })
-  const onChangeText = <T extends TaskType, K extends keyof T>(key: K, value: T[K]) => {
-    setTask((prev) => {
-      return {
-        ...prev,
-        [key]: value,
-      }
-    })
-  }
-  const debouncedText = debounce(onChangeText)
-  const tasks = useTasks()
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const tasks = useTasks()
   const columns = [
-    new ColumnModel(BOARD_VALUES.notStarted, 'Not Started', 1),
-    new ColumnModel(BOARD_VALUES.inProgress, 'In Progress', 2),
-    new ColumnModel(BOARD_VALUES.completed, 'Completed', 3),
+    new ColumnModel('notStarted', 'Not Started', 1),
+    new ColumnModel('inProgress', 'In Progress', 2),
+    new ColumnModel('completed', 'Completed', 3),
   ]
 
   const cards = [
     new CardModel(
       'card1',
-      BOARD_VALUES.notStarted,
+      'notStarted',
       '1st Card',
       'Example card',
       'test description',
@@ -68,7 +46,7 @@ export default function Screen() {
     ),
     new CardModel(
       'Card2',
-      BOARD_VALUES.notStarted,
+      'notStarted',
       '2st Card',
       'Example card',
       'test description',
@@ -132,59 +110,7 @@ export default function Screen() {
           style={{}}
         />
       )}
-      <Modal visible={isModalVisible} transparent={true}>
-        <Pressable
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
-          }}
-          onPress={onRequestClose}
-        >
-          <View
-            style={{
-              width: '80%',
-              padding: 20,
-              backgroundColor: '#FFF', // Transparent white background
-              borderRadius: 10,
-              gap: 20,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Input
-              placeholder={t('taskName')}
-              style={[styles.textInputStyle]}
-              onChangeText={(text) => debouncedText('title', text)}
-              defaultValue={task.title}
-            />
-            <Input
-              placeholder={t('description')}
-              style={[styles.textInputStyle, { height: 100 }]}
-              multiline
-              onChangeText={(text) => debouncedText('description', text)}
-              defaultValue={task.description}
-            />
-            <Button
-              style={styles.buttonStyle}
-              backgroundColor={'black'}
-              color={'white'}
-              children={t('create')}
-            />
-          </View>
-        </Pressable>
-      </Modal>
+      <TaskCreationModal isModalVisible={isModalVisible} onRequestClose={onRequestClose} />
     </SafeAreaViewWrapper>
   )
 }
-
-const styles = StyleSheet.create({
-  textInputStyle: {
-    width: '100%',
-  },
-  buttonStyle: {
-    width: '40%',
-  },
-})
