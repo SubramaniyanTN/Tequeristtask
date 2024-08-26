@@ -9,5 +9,10 @@
   "taskCreatedSuccess": "Task Created Successfully",
   "updateSuccess": "Updated Successfully",
   "error": "Error",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "validationError": {
+    "min1": "Minimum 1 character",
+    "max25": "Maximum 25 characters",
+    "max50": "Maximum 50 characters"
+  }
 }

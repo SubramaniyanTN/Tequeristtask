@@ -1,4 +1,4 @@
-import { Button, Input, useDebounce, useToastController } from '@my/ui'
+import { Button, Input, Text, useDebounce, useToastController } from '@my/ui'
 import { useQueryClient } from '@tanstack/react-query'
 import { TaskType } from 'apps/expo/app'
 import { QUERY_KEY } from 'apps/expo/Query/QUERY_KEY'
@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, useColorScheme } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
+import { z } from 'zod'
 
 type DropdownValuesType = [
   {
@@ -48,8 +49,16 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
       onRequestClose()
     },
   })
+  const [taskError, setTaskError] = useState({
+    title: '',
+    description: '',
+  })
 
   const { t } = useTranslation()
+  const schema = z.object({
+    title: z.string().max(25, t('validationError.max25')).min(1, t('validationError.min1')),
+    description: z.string().max(50, t('validationError.max50')),
+  })
   let dropdownValues: DropdownValuesType = [
     {
       label: 'Not Started',
@@ -79,10 +88,32 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
   }
   const debouncedText = useDebounce(onChangeText, 1000)
   const onCreate = () => {
-    createTask.mutate({
-      url: '/',
-      data: task,
-    })
+    try {
+      const data = schema.parse(task)
+      if (data) {
+        setTaskError({
+          title: '',
+          description: '',
+        })
+        createTask.mutate({
+          url: '/',
+          data: task,
+        })
+      }
+    } catch (error) {
+      let newError = {
+        title: '',
+        description: '',
+      }
+      error.issues.map((singleError) => {
+        if (singleError.path[0] === 'title') {
+          newError['title'] = singleError.message
+        } else if (singleError.path[0] === 'description') {
+          newError['description'] = singleError.message
+        }
+      })
+      setTaskError((prev) => newError)
+    }
   }
   return (
     <Modal visible={isModalVisible} transparent={true}>
@@ -118,7 +149,9 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
             onChangeText={(text) => debouncedText('title', text)}
             defaultValue={task.title}
             {...Styles.inputStyle}
+            borderColor={taskError.title ? 'red' : 'white'}
           />
+          {taskError.title && <Text color={'red'}>{taskError.title}</Text>}
           <Dropdown
             data={dropdownValues}
             labelField={'label'}
@@ -143,9 +176,10 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
             multiline
             onChangeText={(text) => debouncedText('description', text)}
             defaultValue={task.description}
-            borderColor={'white'}
             {...Styles.inputStyle}
+            borderColor={taskError.description ? 'red' : 'white'}
           />
+          {taskError.description && <Text color={'red'}>{taskError.description}</Text>}
           <Button
             variant="outlined"
             style={[styles.buttonStyle, Styles.buttonStyle]}
