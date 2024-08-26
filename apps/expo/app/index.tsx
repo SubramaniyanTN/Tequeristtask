@@ -6,6 +6,7 @@ import { useTasks, useUpdateTask } from '../Query/Tasks/tasks'
 import { ActivityIndicator, Modal } from 'react-native'
 import { useCallback, useState, useRef } from 'react'
 import { Tag } from '@intechnity/react-native-kanban-board/lib/typescript/models/tag'
+import { useStyles } from '../Utils'
 
 export type TaskType = {
   title: string
@@ -19,6 +20,7 @@ export type TaskErrorType = {
 }
 
 export default function Screen() {
+  const Styles = useStyles()
   const { t } = useTranslation()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const tasks = useTasks()
@@ -128,20 +130,20 @@ export default function Screen() {
         <Button
           onPress={onPress}
           variant="outlined"
-          style={{ width: '45%', backgroundColor: '#FFFFFF' }}
+          style={[{ width: '45%' }, Styles.buttonStyle]}
           children={t('createTask')}
-          color={'black'}
+          color={Styles.muitextStyle.color}
         />
       </View>
       {tasks.isLoading ? (
-        <ActivityIndicator color={'#000'} />
+        <ActivityIndicator color={Styles.textStyle.color} />
       ) : (
         <KanbanBoard
           columns={columns}
           cards={cards || []}
           onDragEnd={onCardDragEnd}
           onCardPress={onCardPress}
-          style={{}}
+          style={{ backgroundColor: '#000' }}
           cardContentTextStyle={{
             color: '#000',
             fontSize: 10,
@@ -150,16 +152,19 @@ export default function Screen() {
       )}
       <Modal style={{ flex: 1 }} transparent visible={updateTask.isPending}>
         <View
-          style={{
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'black',
-            opacity: 0.4,
-          }}
+          style={[
+            {
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'black',
+              opacity: 0.4,
+            },
+            Styles.container,
+          ]}
         >
-          <ActivityIndicator />
+          <ActivityIndicator color={Styles.textStyle.color} />
         </View>
       </Modal>
       <TaskCreationModal isModalVisible={isModalVisible} onRequestClose={onRequestClose} />

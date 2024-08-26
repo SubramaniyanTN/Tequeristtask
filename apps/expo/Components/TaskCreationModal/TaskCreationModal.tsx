@@ -3,9 +3,10 @@ import { useQueryClient } from '@tanstack/react-query'
 import { TaskType } from 'apps/expo/app'
 import { QUERY_KEY } from 'apps/expo/Query/QUERY_KEY'
 import { useCreateTask } from 'apps/expo/Query/Tasks/tasks'
+import { useStyles } from 'apps/expo/Utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Pressable, StyleSheet } from 'react-native'
+import { Modal, Pressable, StyleSheet, useColorScheme } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 
 type DropdownValuesType = [
@@ -24,6 +25,7 @@ type DropdownValuesType = [
 ]
 
 const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
+  const Styles = useStyles()
   const toast = useToastController()
   const queryClient = useQueryClient()
   const createTask = useCreateTask({
@@ -94,22 +96,28 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
         onPress={onRequestClose}
       >
         <Pressable
-          style={{
-            width: '80%',
-            padding: 20,
-            backgroundColor: '#FFF', // Transparent white background
-            borderRadius: 10,
-            gap: 20,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={[
+            {
+              width: '80%',
+              padding: 20,
+              backgroundColor: '#FFF', // Transparent white background
+              borderRadius: 10,
+              gap: 20,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderColor: useColorScheme() === 'dark' ? '#FFF' : undefined,
+              borderWidth: 1,
+            },
+            Styles.container,
+          ]}
         >
           <Input
             placeholder={t('taskName')}
             style={[styles.textInputStyle]}
             onChangeText={(text) => debouncedText('title', text)}
             defaultValue={task.title}
+            {...Styles.inputStyle}
           />
           <Dropdown
             data={dropdownValues}
@@ -119,20 +127,28 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
             placeholder={'Select Unit *'}
             search={false}
             value={task.status}
-            style={styles.dropdownStyle}
-            containerStyle={{ width: '70%', backgroundColor: '#f8f8f8' }}
-            selectedTextStyle={{ fontSize: 15, color: '#000', fontWeight: '400' }}
+            style={[styles.dropdownStyle, Styles.container]}
+            containerStyle={[{ width: '70%' }, Styles.container]}
+            selectedTextStyle={[{ fontSize: 15, fontWeight: '400' }, Styles.textStyle]}
             itemTextStyle={{ color: 'gray' }}
+            itemContainerStyle={{}}
           />
           <Input
             placeholder={t('description')}
-            style={[styles.textInputStyle, { height: 100 }]}
+            style={[
+              styles.textInputStyle,
+              { height: 100 },
+              { borderColor: '#FFF', borderWidth: 10 },
+            ]}
             multiline
             onChangeText={(text) => debouncedText('description', text)}
             defaultValue={task.description}
+            borderColor={'white'}
+            {...Styles.inputStyle}
           />
           <Button
-            style={styles.buttonStyle}
+            variant="outlined"
+            style={[styles.buttonStyle, Styles.buttonStyle]}
             backgroundColor={'black'}
             color={'white'}
             children={t('create')}
