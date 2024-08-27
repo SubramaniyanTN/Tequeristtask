@@ -160,7 +160,11 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
             placeholder={'Select Unit *'}
             search={false}
             value={task.status}
-            style={[styles.dropdownStyle, Styles.container]}
+            style={[
+              styles.dropdownStyle,
+              Styles.container,
+              { backgroundColor: useColorScheme() === 'light' ? '#f8f8f8' : undefined },
+            ]}
             containerStyle={[{ width: '70%' }, Styles.container]}
             selectedTextStyle={[{ fontSize: 15, fontWeight: '400' }, Styles.textStyle]}
             itemTextStyle={{ color: 'gray' }}
@@ -184,7 +188,7 @@ const TaskCreationModal = ({ isModalVisible, onRequestClose }) => {
             variant="outlined"
             style={[styles.buttonStyle, Styles.buttonStyle]}
             backgroundColor={'black'}
-            color={'white'}
+            color={useColorScheme() === 'light' ? 'black' : 'white'}
             children={t('create')}
             onPress={onCreate}
           />
